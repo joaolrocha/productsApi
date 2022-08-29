@@ -1,33 +1,37 @@
-/* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
+import { Product } from "./product.model";
 
 @Controller('products')
 export class ProductsController {
+  products: Product[] = [
+    new Product("LIV01", "Livro do Harry", 29.90),
+    new Product("LIV03", "Livro do Percy jackson", 39.90),
+    new Product("LIV01", "Livro do GOT", 29.90),
+  ];
 
   @Get()
-  obterTodos(): string {
-    return 'Lista todos os produtos'
+  obterTodos(): Product[] {
+    return this.products
   }
 
   @Get(':id')
-  obterUm(@Param() params): string {
-    return `Retorna os dados do produto ${params.id}`;
+  obterUm(@Param() params): Product {
+    return this.products[0];
   }
 
   @Post()
-  criar(@Body() produto): string {
-    console.log(produto)
-    return `Produto criado`;
+  criar(@Body() produto: Product) {
+    produto.id = 100;
+    this.products.push(produto);
   }
 
   @Put()
-  alterar(@Body() produto): string {
-    console.log(produto)
-    return `Produto alterado`;
+  alterar(@Body() produto: Product): Product {
+    return produto;
   }
 
   @Delete(':id')
-  apagar(@Param() params): string {
-    return `Apaga o produto ${params.id}`
+  apagar(@Param() params){
+    this.products.pop();
   }
 }
